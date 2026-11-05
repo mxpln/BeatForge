@@ -1,0 +1,90 @@
+name: Verify and deploy BeatForge
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: beatforge-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Test and package static site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run project tests (when included)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -d tests ]] && compgen -G 'tests/*.mjs' >/dev/null; then
+            for test in tests/*.mjs; do
+              node "$test"
+            done
+          fi
+
+      - name: Verify and assemble static site
+        shell: bash
+        run: |
+          set -euo pipefail
+          site_dir=.
+          if [[ -f dist/index.html ]]; then
+            site_dir=dist
+          fi
+
+          files=(index.html styles.css app.js genre-rules.js livepilot.js livepilot-catalog.json)
+          for file in "${files[@]}"; do
+            if [[ ! -s "$site_dir/$file" ]]; then
+              echo "::error::Missing static asset: $site_dir/$file"
+              exit 1
+            fi
+          done
+
+          for script in app.js genre-rules.js livepilot.js; do
+            node --check "$site_dir/$script"
+          done
+
+          mkdir -p pages-out
+          for file in "${files[@]}"; do
+            cp "$site_dir/$file" pages-out/
+          done
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: pages-out
+
+  deploy:
+    name: Publish to GitHub Pages
+    if: ${{ github.event_name != 'pull_request' }}
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

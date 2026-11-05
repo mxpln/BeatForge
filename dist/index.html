@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090d12">
+  <meta name="description" content="BeatForge: generate drum patterns from genre rules or LivePilot MIDI recipes, edit grooves and export MIDI.">
+  <title>BeatForge — Rhythm Lab</title>
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    .step-cell.roll{background-image:repeating-linear-gradient(135deg,transparent 0,transparent 5px,#101d2033 5px,#101d2033 8px)}
+    .generator-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:#0d141c;border:1px solid #34404d;border-radius:10px;padding:4px;margin-bottom:14px}
+    .generator-tab{background:transparent;color:#9eafb9;border:1px solid transparent;border-radius:7px;padding:10px 5px;font-size:11px;font-weight:850;cursor:pointer}
+    .generator-tab.active{color:#0b170b;background:#b7fb82;border-color:#b7fb82}
+    .generator-tab:focus-visible{outline:2px solid #b7fb82;outline-offset:3px}
+    .mode-pane[hidden],.provider-pane[hidden]{display:none!important}
+    .source-pill{border:1px solid #4c6640;color:#b7fb82;background:#213225;border-radius:7px;padding:8px 9px;font-size:10px;font-weight:850;white-space:nowrap}
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="masthead">
+      <div class="brand">
+        <div class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M2 17h5l4-11 7 22 5-15 3 4h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></div>
+        <div><div class="brand-name">BEAT<span>FORGE</span><small> / RHYTHM LAB</small></div><div class="brand-subtitle">Genre-driven beats. Made to be edited.</div></div>
+      </div>
+      <div class="session-tag"><span id="status-light" class="light"></span><span id="session-status">READY</span></div>
+    </header>
+
+    <main>
+      <div class="headline-row">
+        <div><div class="eyebrow">001 / RHYTHM ENGINE</div><h1>Make it <em>groove.</em></h1><p>Choose a genre or LivePilot recipe, shape the rhythm and export playable MIDI.</p></div>
+      </div>
+
+      <div class="workspace">
+        <aside class="sidebar">
+          <section class="panel">
+            <div class="section-heading"><span>01</span><h2>Generate a beat</h2></div>
+            <div class="generator-tabs" role="tablist" aria-label="Pattern generator mode">
+              <button type="button" id="mode-genre" class="generator-tab active" role="tab" aria-controls="genre-mode" aria-selected="true">Genre</button>
+              <button type="button" id="mode-recipe" class="generator-tab" role="tab" aria-controls="recipe-mode" aria-selected="false">LivePilot Recipe</button>
+            </div>
+            <div id="genre-mode" class="mode-pane" role="tabpanel" aria-labelledby="mode-genre">
+              <label class="control-label" for="genre-provider">Genre collection</label>
+              <select id="genre-provider"><option value="template">BeatForge templates (18)</option><option value="concept">LivePilot genre concepts (27)</option></select>
+              <div id="template-provider" class="provider-pane">
+                <label class="control-label" for="guide-style">Choose genre</label>
+                <select id="guide-style">
+                  <optgroup label="Electronic"><option value="house">House</option><option value="techno">Techno</option><option value="disco">Disco</option><option value="minimal">Minimal Techno</option><option value="trap">Trap</option><option value="dnb">Drum &amp; Bass</option><option value="jungle">Jungle / DnB</option></optgroup>
+                  <optgroup label="Hip-Hop &amp; R&amp;B"><option value="boombap">Boom Bap</option><option value="lofi">Lo-fi Hip-Hop</option><option value="soul">Soul / R&amp;B</option></optgroup>
+                  <optgroup label="Live Band"><option value="funk">Funk</option><option value="rock">Rock</option><option value="jazz">Jazz / Swing</option><option value="pop">Pop</option></optgroup>
+                  <optgroup label="Global Rhythms"><option value="reggae">Reggae</option><option value="reggaeton">Reggaeton / Dembow</option><option value="afrobeat">Afrobeat</option><option value="latin">Latin</option></optgroup>
+                </select>
+              </div>
+              <div id="concept-provider" class="provider-pane" hidden>
+                <label class="control-label" for="livepilot-genre">Choose LivePilot genre</label>
+                <select id="livepilot-genre" disabled><option>Loading genre concepts…</option></select>
+                <div id="concept-details" class="hint">Genre concepts guide tempo and rhythmic structure; they are not MIDI performances.</div>
+                <div id="genre-validation" class="hint" aria-live="polite">The verified kick, snare and hi-hat positions for this genre will appear here.</div>
+              </div>
+              <button id="generate-genre" class="button button-lime full">✦ Generate Genre</button>
+              <p class="hint">Uses only the chosen genre's rhythm rules. Each generation creates a fresh groove; no recipe is layered in.</p>
+            </div>
+            <div id="recipe-mode" class="mode-pane" role="tabpanel" aria-labelledby="mode-recipe" hidden>
+              <label class="control-label" for="livepilot-style">Choose LivePilot MIDI recipe</label>
+              <select id="livepilot-style" disabled><option>Loading recipes…</option></select>
+              <button id="generate-recipe" class="button button-lime full" disabled>✦ Generate LivePilot Recipe</button>
+              <p class="hint">Uses only the MIDI notes from the selected LivePilot recipe, without genre-template additions or mutations.</p>
+            </div>
+            <button id="fetch-livepilot" class="button button-outline full" style="margin-top:16px">↻ Refresh LivePilot data</button>
+            <div id="livepilot-feedback" class="load-feedback" role="status" aria-live="polite">Loading public MIDI recipes and genre definitions from LivePilot.</div>
+            <p class="hint">LivePilot's public repository uses the <a href="https://github.com/dreamrec/LivePilot/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Business Source License 1.1</a>. BeatForge processes genre facts and example note data, not the original source documents.</p>
+          </section>
+
+          <section class="panel">
+            <div class="section-heading"><span>02</span><h2>Groove controls</h2></div>
+            <label class="control-label" for="bpm">Tempo <output id="bpm-value">124 BPM</output></label>
+            <input id="bpm" type="range" min="60" max="190" value="124">
+            <label class="control-label" for="swing">Swing <output id="swing-value">6%</output></label>
+            <input id="swing" type="range" min="0" max="45" value="6">
+            <label class="control-label" for="quantize">Quantize strength <output id="quantize-value">50%</output></label>
+            <input id="quantize" type="range" min="0" max="100" value="50">
+            <p class="hint">0% keeps subtle note timing offsets; 100% snaps hits to the 16th-note grid. Swing is applied separately.</p>
+          </section>
+        </aside>
+
+        <section class="main-column">
+          <div class="transport panel">
+            <div class="transport-left"><button id="play" class="play-button" aria-label="Play pattern">▶</button><button id="stop" class="stop-button" aria-label="Stop pattern">■</button><div class="transport-text"><strong id="transport-heading">Ready to play</strong><small id="transport-subheading">Guide template · 4/4 · 1 bar</small></div></div>
+            <div class="transport-right"><div class="mini-label">CURRENT TEMPO</div><div class="big-bpm"><span id="bpm-display">124</span><small>BPM</small></div></div>
+          </div>
+
+          <section class="panel sequencer-panel">
+            <div class="sequencer-head"><div><div class="eyebrow">STEP SEQUENCER / 16 STEPS</div><h2 id="pattern-heading">House / Techno</h2><p id="pattern-subheading">Reference template · not recorded performance</p><p style="margin-top:5px">Select an active note to edit it; click again to remove.</p></div><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end"><span id="pattern-source-badge" class="source-pill">GENRE</span><div class="hits-pill"><span id="hit-count">0</span> HITS</div></div></div>
+            <div class="grid-scroll"><div id="grid" class="beat-grid" aria-label="Drum step sequencer"></div></div>
+            <div class="sequence-actions"><button id="mutate" class="button button-outline">⤨ Mutate</button><button id="euclidean" class="button button-outline">◌ Euclidean perc</button><button id="hat-roll" class="button button-outline">⇢ 32nd hat roll</button><button id="ghost-notes" class="button button-outline">◦ Ghost snare</button><button id="clear" class="button button-outline">Clear</button><span class="legend"><i></i> ACTIVE HIT</span></div>
+          </section>
+
+          <section class="editor-grid">
+            <div class="panel note-panel"><div class="section-heading"><span>03</span><h2>Selected note</h2></div><div class="selected-summary" id="selected-summary">Choose a step to edit its dynamics.</div>
+              <label class="control-label" for="velocity">Velocity <output id="velocity-value">100</output></label><input type="range" id="velocity" min="1" max="127" value="100" disabled>
+              <label class="control-label" for="probability">Trigger probability <output id="probability-value">100%</output></label><input type="range" id="probability" min="5" max="100" step="5" value="100" disabled>
+              <p class="hint">Probability affects each playback loop. Export freezes one possible performance.</p>
+            </div>
+            <div class="panel export-panel"><div class="section-heading"><span>04</span><h2>Send it to your DAW</h2></div><p class="panel-copy">Use standard MIDI drum notes (channel 10), or copy the beat-based note dictionaries described in the LivePilot guide.</p>
+              <button id="export-midi" class="button button-lime full">↓ Export MIDI</button>
+              <button id="copy-livepilot" class="button button-outline full">⌘ Copy LivePilot notes</button>
+              <p class="hint">Check your Drum Rack's pad mapping; not every kit follows General MIDI.</p>
+            </div>
+          </section>
+          <div id="message" class="message" aria-live="polite">Choose a genre or LivePilot recipe to generate a pattern.</div>
+        </section>
+      </div>
+    </main>
+    <footer><div>BEATFORGE <span>•</span> RHYTHM LAB</div><div>Sources: <a href="https://github.com/dreamrec/LivePilot/tree/main/livepilot/skills/livepilot-core/references/concepts/genres" target="_blank" rel="noopener noreferrer">LivePilot genres</a> <span>·</span> <a href="https://raw.githubusercontent.com/dreamrec/LivePilot/76a860a45224c59a5aaefb0f73adcc083d7bd07b/docs/manual/midi-guide.md" target="_blank" rel="noopener noreferrer">MIDI Guide</a> <span>·</span> <a href="https://raw.githubusercontent.com/dreamrec/LivePilot/76a860a45224c59a5aaefb0f73adcc083d7bd07b/livepilot/skills/livepilot-core/references/midi-recipes.md" target="_blank" rel="noopener noreferrer">MIDI Recipes</a></div></footer>
+  </div>
+  <script src="./livepilot.js" defer></script>
+  <script src="./genre-rules.js" defer></script>
+  <script src="./app.js" defer></script>
+</body>
+</html>

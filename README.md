@@ -1,41 +1,37 @@
-# BeatForge — GitHub Pages
+# BeatForge — Rhythm Lab
 
-This repository contains a static BeatForge site and a GitHub Actions workflow
-that validates and deploys it to GitHub Pages.
+BeatForge is a browser-based drum sequencer with separate genre and LivePilot
+recipe generators, editable 16-step patterns, playback, and MIDI export.
 
-## Publish the website
+## Files
 
-1. Create a GitHub repository (for example, `beatforge`).
-2. Upload **all** files from this folder to its `main` branch, including the
-   hidden `.github/workflows/deploy-pages.yml` file. The workflow must be in
-   that exact path. Do not upload the ZIP as a single file.
-3. In the GitHub repository, open **Settings → Pages → Build and deployment**.
-   Select **GitHub Actions** as the source.
-4. Open **Actions → Verify and deploy BeatForge**. The workflow runs on pushes
-   to `main`. You can also select **Run workflow** manually.
-5. When the deployment succeeds, GitHub Pages provides the URL. For a project
-   named `beatforge`, the usual URL is
-   `https://YOUR-USERNAME.github.io/beatforge/`.
+- `dist/`: complete static website. There is no compilation or backend.
+- `tests/`: checks for all 27 LivePilot genres, generator independence, and
+  the current interface.
+- `.github/workflows/deploy-pages.yml`: checks and GitHub Pages deployment.
 
-The workflow also runs checks on pull requests, without publishing those PRs.
-On every push to `main`, it validates the site and deploys **only if checks
-pass**. It requires no personal access token or repository secret.
+## Deploy with GitHub Pages
 
-## Directory layout
+1. In this repository, open **Settings → Pages → Build and deployment**.
+2. Choose **GitHub Actions** as the source.
+3. Push to `main` or run **Actions → Verify and deploy BeatForge → Run workflow**.
+4. Once GitHub Pages finishes, visit the URL shown in the deployment job.
 
-This package places `index.html` and other static assets at the repository
-root. The workflow also supports a repository where those assets live in
-`dist/`, matching the original BeatForge project layout.
+On pull requests, only checks run; there is no deployment. Pushes to `main`
+deploy the exact `dist/` files after the checks pass.
 
-## What needs internet access?
+## Local development
 
-BeatForge is a static site with no backend. The built-in genre templates and
-sequencer work without a hosted API. LivePilot MIDI recipe definitions are
-fetched from LivePilot's public GitHub files at runtime, so those recipes need
-an internet connection.
+```sh
+node tests/interface-cleanup.mjs
+node tests/genre-audit.mjs
+node tests/generation-modes.mjs
+python3 -m http.server --directory dist 8000
+```
 
-## Sources
+Visit `http://localhost:8000`.
 
-GitHub Pages setup: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
+The site is static. Its built-in genre rules work without a backend, but
+fetching current LivePilot MIDI recipe documents requires internet access.
 
-LivePilot genre and recipe sources are linked in the site footer.
+**Sources:** [LivePilot genres](https://github.com/dreamrec/LivePilot/tree/main/livepilot/skills/livepilot-core/references/concepts/genres) · [GitHub Pages documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)

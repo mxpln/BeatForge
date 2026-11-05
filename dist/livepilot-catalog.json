@@ -1,0 +1,195 @@
+{
+  "source": "https://github.com/dreamrec/LivePilot/tree/main/livepilot/skills/livepilot-core/references/concepts/genres",
+  "description": "Facts-only fallback: genre labels and tempo hints, not the original YAML files",
+  "genres": [
+    {
+      "id": "ambient",
+      "name": "Ambient / Drone",
+      "filename": "ambient.yaml",
+      "tempoMin": 0,
+      "tempoMax": 90
+    },
+    {
+      "id": "boom_bap",
+      "name": "Boom Bap",
+      "filename": "boom_bap.yaml",
+      "tempoMin": 85,
+      "tempoMax": 95
+    },
+    {
+      "id": "deep_minimal",
+      "name": "Deep Minimal / Villalobos-school",
+      "filename": "deep-minimal.yaml",
+      "tempoMin": 125,
+      "tempoMax": 135
+    },
+    {
+      "id": "deep_house",
+      "name": "Deep House",
+      "filename": "deep_house.yaml",
+      "tempoMin": 118,
+      "tempoMax": 124
+    },
+    {
+      "id": "detroit_techno",
+      "name": "Detroit Techno",
+      "filename": "detroit_techno.yaml",
+      "tempoMin": 128,
+      "tempoMax": 140
+    },
+    {
+      "id": "disco",
+      "name": "Disco",
+      "filename": "disco.yaml",
+      "tempoMin": 110,
+      "tempoMax": 125
+    },
+    {
+      "id": "downtempo",
+      "name": "Downtempo",
+      "filename": "downtempo.yaml",
+      "tempoMin": 70,
+      "tempoMax": 100
+    },
+    {
+      "id": "drone",
+      "name": "Drone",
+      "filename": "drone.yaml",
+      "tempoMin": 0,
+      "tempoMax": 0
+    },
+    {
+      "id": "drum_and_bass",
+      "name": "Drum and Bass / Jungle",
+      "filename": "drum-and-bass.yaml",
+      "tempoMin": 170,
+      "tempoMax": 180
+    },
+    {
+      "id": "dub_techno",
+      "name": "Dub Techno",
+      "filename": "dub-techno.yaml",
+      "tempoMin": 120,
+      "tempoMax": 130
+    },
+    {
+      "id": "dub",
+      "name": "Dub",
+      "filename": "dub.yaml",
+      "tempoMin": 70,
+      "tempoMax": 90
+    },
+    {
+      "id": "dubstep",
+      "name": "Dubstep / Bass Music (Modern)",
+      "filename": "dubstep.yaml",
+      "tempoMin": 138,
+      "tempoMax": 142
+    },
+    {
+      "id": "experimental",
+      "name": "Experimental / Noise / Found-Sound",
+      "filename": "experimental.yaml",
+      "tempoMin": 0,
+      "tempoMax": 0
+    },
+    {
+      "id": "footwork",
+      "name": "Footwork / Juke",
+      "filename": "footwork.yaml",
+      "tempoMin": 155,
+      "tempoMax": 165
+    },
+    {
+      "id": "hip_hop",
+      "name": "Hip-Hop (Boom Bap / Lo-Fi)",
+      "filename": "hip-hop.yaml",
+      "tempoMin": 85,
+      "tempoMax": 95
+    },
+    {
+      "id": "house",
+      "name": "House / Deep House",
+      "filename": "house.yaml",
+      "tempoMin": 120,
+      "tempoMax": 126
+    },
+    {
+      "id": "hyperpop",
+      "name": "Hyperpop",
+      "filename": "hyperpop.yaml",
+      "tempoMin": 100,
+      "tempoMax": 160
+    },
+    {
+      "id": "idm",
+      "name": "IDM",
+      "filename": "idm.yaml",
+      "tempoMin": 80,
+      "tempoMax": 150
+    },
+    {
+      "id": "lo_fi",
+      "name": "Lo-Fi",
+      "filename": "lo_fi.yaml",
+      "tempoMin": 70,
+      "tempoMax": 90
+    },
+    {
+      "id": "microhouse",
+      "name": "Microhouse",
+      "filename": "microhouse.yaml",
+      "tempoMin": 122,
+      "tempoMax": 128
+    },
+    {
+      "id": "minimal_techno",
+      "name": "Minimal Techno",
+      "filename": "minimal-techno.yaml",
+      "tempoMin": 128,
+      "tempoMax": 132
+    },
+    {
+      "id": "modern_classical",
+      "name": "Modern Classical / Cinematic",
+      "filename": "modern-classical.yaml",
+      "tempoMin": 60,
+      "tempoMax": 90
+    },
+    {
+      "id": "soul",
+      "name": "Soul",
+      "filename": "soul.yaml",
+      "tempoMin": 85,
+      "tempoMax": 100
+    },
+    {
+      "id": "synthwave",
+      "name": "Synthwave",
+      "filename": "synthwave.yaml",
+      "tempoMin": 85,
+      "tempoMax": 115
+    },
+    {
+      "id": "techno",
+      "name": "Techno",
+      "filename": "techno.yaml",
+      "tempoMin": 128,
+      "tempoMax": 140
+    },
+    {
+      "id": "trap",
+      "name": "Trap / Modern Hip-Hop",
+      "filename": "trap.yaml",
+      "tempoMin": 130,
+      "tempoMax": 160
+    },
+    {
+      "id": "uk_garage",
+      "name": "Garage / UK Garage / 2-Step",
+      "filename": "uk-garage.yaml",
+      "tempoMin": 130,
+      "tempoMax": 140
+    }
+  ]
+}
